@@ -29,7 +29,7 @@ food=turtle.clone()
 food_type=0
 drop_time=200
 drf=0
-
+direction=0
 LEFT_ARROW='Left'
 RIGHT_ARROW='Right'
 TIME_STEP=100
@@ -73,18 +73,6 @@ def move_plane():
         plane.goto(x_pos-square_size,y_pos)
         print('you moved left')
 
-def drop_food():
-    if drf== DOWN:
-        my_pos=plane.pos()
-        x_pos= my_pos[0]
-        y_pos=my_pos[1]
-        
-        for i in range(10):
-            food.goto(x_pos,y_pos-square_size)
-            print('you dropped food!')
-#turtle.ontimer(drop_food(),drop_time)
-
-        
 def make_food(): 
     global food_type
     food_type = random.randint(1,number_of_types)
@@ -102,6 +90,25 @@ def make_food():
     food_new=food.stamp()
     food_pos.append(food_new_pos)
     food_stamp.append(food_new)
+    if move_plane():
+        old_food_stamp=food_stamp.pop(0)
+        food.clearstamp(old_food_stamp)
+        food_pos.pop(0)
+        moveplane()
+        
+def drop_food():
+    if drf== DOWN:
+        my_pos=plane.pos()
+        x_pos= my_pos[0]
+        y_pos=my_pos[1]
+        
+        for i in range(10):
+            food.goto(x_pos,y_pos-square_size)
+            print('you dropped food!')
+#turtle.ontimer(drop_food(),drop_time)
+
+        
+
 make_food()
 
 turtle.mainloop()
