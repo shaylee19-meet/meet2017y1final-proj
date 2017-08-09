@@ -46,11 +46,10 @@ food_pos=[]
 food_drop_pos=[]
 food_drop_stamp=[]
 food_stamp=[]
-character_pos_list=[]
 turtle.penup()
 turtle.hideturtle()
 
-food=plane.clone() 
+food=turtle.clone() 
 food_type=0
 drop_time=200
 drf=0
@@ -100,12 +99,11 @@ turtle.listen()
 pygame.init()
 pygame.mixer.music.load("mario.mp3")
 pygame.mixer.music.play()
-#time.sleep(10)
+
 
 def move_character():
     global direction
     my_pos3=character.pos()
-    character_pos_list.append(my_pos3)
     x_pos=my_pos3[0]
     y_pos=my_pos3[1]
     
@@ -118,7 +116,6 @@ def move_character():
     new_pos3=character.pos()
     new_x_pos=new_pos3[0]
     new_y_pos=new_pos3[1]
-    
     if new_x_pos>=RIGHT_EDGE:
         character.hideturtle()
         character.goto(-400,-175)
@@ -127,9 +124,6 @@ def move_character():
         character.hideturtle()
         character.goto(400,-175)
         character.showturtle()
-    
-    character_pos_list.pop(0)
-    
     #turtle.ontimer(move_character,TIME_STEP_CHARACTER)
 
 
@@ -193,7 +187,9 @@ def drop_food():
     x_pos= food_pos1[0]
     y_pos=food_pos1[1]
     #print(direction)
-    if y_pos > -300:
+    
+    if y_pos > -250:
+        print(y_pos)
         y_pos = y_pos -square_size 
         food.goto(x_pos,y_pos)
         food_new=food.stamp()
@@ -203,26 +199,25 @@ def drop_food():
         food.clearstamp(old_stamp)
         food_pos.pop(0)
         #turtle.ontimer(drop_food,TIME_STEP)
-        cx=character.pos()[0]
-        cy=character.pos()[1]
-        a=20
-        b=20
-        if (x_pos>=cx-a) and (x_pos<=cx+a) and (y_pos>=cy-b) and (y_pos<=cy+b):
-            quit()
     else:
         quit()
         
-
+turtle.register_shape('grape.gif')
+turtle.register_shape('strawberry.gif')
+turtle.register_shape('banana.gif')
         
 def make_food():
     global food_type
     food_type = random.randint(1,number_of_types)
     if food_type==1:
-        food.shape('circle')
+        food=turtle.clone()
+        food.shape('grape.gif')
     elif food_type==2:
-        food.shape('square') 
+        food=turtle.clone()
+        food.shape('strawberry.gif')
     elif food_type==3:
-        food.shape('triangle')
+        food=turtle.clone()
+        food.shape('banana.gif')
     else:
         food.shape('arrow')    
     
