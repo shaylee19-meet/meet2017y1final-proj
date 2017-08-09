@@ -5,7 +5,7 @@ score=0
 SIZE_X=800
 SIZE_Y=500
 turtle.setup(SIZE_X,SIZE_Y)
-##if character.pos==food.pos:
+##if character.pos()==food.pos():
 ##    character.clearstamp()
 ##    character.shape("happy.gif")
 ##    score+=100
