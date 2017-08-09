@@ -3,23 +3,25 @@ import random
 import time
 import pygame
 
+screen=turtle.Screen()
+turtle.bgpic('wallpaper2.gif')
 turtle.tracer(1,0)
 t=60
 score=0
-SIZE_X=800
-SIZE_Y=500
+SIZE_X=700
+SIZE_Y=600
+turtle.setup(SIZE_X,SIZE_Y)
 square_size=30
 food_size=2
 counter_timer = 0
 turtle.penup()
 turtle.hideturtle()
 turtle.register_shape('plane1.gif')
-turtle.goto(-300,250)
+turtle.goto(-350,190)
 turtle.showturtle()
 
 plane=turtle.clone()
 plane.shape('plane1.gif')
-plane.goto(100,100)
 turtle.penup()
 turtle.goto(400,250)
 turtle.pendown()
@@ -32,6 +34,9 @@ turtle.hideturtle()
 turtle.goto(-400,-175)
 turtle.showturtle()
  
+turtle.register_shape('grape.gif')
+turtle.register_shape('strawberry.gif')
+turtle.register_shape('banana.gif')
 turtle.register_shape('final_proj_character.gif')
 character=turtle.clone()
 character.shape('final_proj_character.gif')
@@ -50,7 +55,7 @@ character_pos_list=[]
 turtle.penup()
 turtle.hideturtle()
 
-food=plane.clone() 
+food=turtle.clone()  #fixed this line
 food_type=0
 drop_time=200
 drf=0
@@ -93,14 +98,13 @@ def down():
     print("You dropped food!")
 
 
-turtle.onkeypress(right, RIGHT_ARROW)
+turtle.onkeypress(right,RIGHT_ARROW)
 turtle.onkeypress(left,LEFT_ARROW)
 turtle.onkeypress(down,DOWN_ARROW)
 turtle.listen()
 pygame.init()
 pygame.mixer.music.load("mario.mp3")
 pygame.mixer.music.play()
-#time.sleep(10)
 
 def move_character():
     global direction
@@ -132,10 +136,15 @@ def move_character():
     
     #turtle.ontimer(move_character,TIME_STEP_CHARACTER)
 
-
+charmove_counter = 0
+charmove_delay = 3
 def move_plane():
-    global t,counter_timer
-    move_character()
+    global t,counter_timer, charmove_counter
+    if charmove_counter < charmove_delay:
+        charmove_counter += 1
+    else:
+        move_character()
+        charmove_counter = 0
     my_pos=plane.pos()
     x_pos= my_pos[0]
     y_pos=my_pos[1]
@@ -205,10 +214,14 @@ def drop_food():
         #turtle.ontimer(drop_food,TIME_STEP)
         cx=character.pos()[0]
         cy=character.pos()[1]
-        a=20
-        b=20
+        a=30
+        b=35
         if (x_pos>=cx-a) and (x_pos<=cx+a) and (y_pos>=cy-b) and (y_pos<=cy+b):
-            quit()
+            global score
+            score= score+100
+            food.hideturtle()
+            print('you ate food')
+            make_food()
     else:
         quit()
         
@@ -218,18 +231,18 @@ def make_food():
     global food_type
     food_type = random.randint(1,number_of_types)
     if food_type==1:
-        food.shape('circle')
+        food.shape('grape.gif')
     elif food_type==2:
-        food.shape('square') 
+        food.shape('strawberry.gif')
     elif food_type==3:
-        food.shape('triangle')
+        food.shape('banana.gif')
     else:
         food.shape('arrow')    
-    
+    food.showturtle()
 ##
 ##if character.pos()==food_pos[0:-1]:
 ##    print('you ate food')
-move_plane()
 make_food()
+move_plane()
 #turtle.mainloop()
 

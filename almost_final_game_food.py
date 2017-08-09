@@ -4,22 +4,16 @@ import time
 import pygame
 
 turtle.tracer(1,0)
-t=60
-score=0
-SIZE_X=800
-SIZE_Y=500
-square_size=30
-food_size=2
-counter_timer = 0
+turtle.register_shape('plane1.gif')
+turtle.register_shape('final_proj_character.gif')
+turtle.register_shape('planeleft.gif')
+turtle.register_shape('grape.gif')
+turtle.register_shape('strawberry.gif')
+turtle.register_shape('banana.gif')
 turtle.penup()
 turtle.hideturtle()
-turtle.register_shape('plane1.gif')
 turtle.goto(-300,250)
 turtle.showturtle()
-
-plane=turtle.clone()
-plane.shape('plane1.gif')
-plane.goto(100,100)
 turtle.penup()
 turtle.goto(400,250)
 turtle.pendown()
@@ -31,8 +25,21 @@ turtle.penup()
 turtle.hideturtle()
 turtle.goto(-400,-175)
 turtle.showturtle()
- 
-turtle.register_shape('final_proj_character.gif')
+
+t=60
+score=0
+SIZE_X=800
+SIZE_Y=500
+square_size=30
+food_size=2
+counter_timer = 0
+
+
+plane=turtle.clone()
+plane.shape('plane1.gif')
+plane.goto(100,100)
+
+
 character=turtle.clone()
 character.shape('final_proj_character.gif')
 character_pos=(0,-450)
@@ -68,6 +75,7 @@ LEFT_EDGE=-350
 DOWN=2
 direction=RIGHT
 Direction=RIGHT
+
 def printTime():
     global t
     turtle.clear()
@@ -96,9 +104,9 @@ turtle.onkeypress(right, RIGHT_ARROW)
 turtle.onkeypress(left,LEFT_ARROW)
 turtle.onkeypress(down,DOWN_ARROW)
 turtle.listen()
-pygame.init()
-pygame.mixer.music.load("mario.mp3")
-pygame.mixer.music.play()
+#pygame.init()
+#pygame.mixer.music.load("mario.mp3")
+#pygame.mixer.music.play()
 
 
 def move_character():
@@ -147,7 +155,6 @@ def move_plane():
         food.clearstamp(old_stamp)
         food_pos.pop(0)
     elif direction==LEFT:
-        turtle.register_shape('planeleft.gif')
         plane.shape('planeleft.gif')
         plane.goto(x_pos-square_size,y_pos)
         print('you moved left')
@@ -202,9 +209,7 @@ def drop_food():
     else:
         quit()
         
-turtle.register_shape('grape.gif')
-turtle.register_shape('strawberry.gif')
-turtle.register_shape('banana.gif')
+
         
 def make_food():
     global food_type
