@@ -5,12 +5,12 @@ import pygame
 turtle.tracer(1,0)
 
 #registered parts:
-turtle.register_shape('plane1.gif')
+turtle.register_shape('planeaa.gif')
 turtle.register_shape('grape.gif')
 turtle.register_shape('strawberry.gif')
 turtle.register_shape('banana.gif')
 turtle.register_shape('final_proj_character.gif')
-turtle.register_shape('planeleft.gif')
+turtle.register_shape('planeab.gif')
 turtle.register_shape("life.gif")
 
 # lists:
@@ -53,6 +53,7 @@ counter_timer = 0
 charmove_counter = 0
 charmove_delay = 3
 heart_size=50
+life_counter=3
 
 #background:
 screen=turtle.Screen()
@@ -70,13 +71,14 @@ life2.goto(-425,225)
 life3=life.clone()
 life3.goto(-475,225)
 
+
 #plane place:
 turtle.penup()
 turtle.hideturtle()
 turtle.goto(-350,190)
 turtle.showturtle()
 plane=turtle.clone()
-plane.shape('plane1.gif')
+plane.shape('planeaa.gif')
 turtle.hideturtle()
 turtle.goto(-400,-175)
 turtle.showturtle()
@@ -106,14 +108,16 @@ def printTime():
 def right():
     #plane moving right:
     global direction
-    direction=RIGHT
+    if direction != DOWN:
+        direction=RIGHT
     #move_plane()
     print('you pressed the right key')
 
 def left():
     #plane moving left
     global direction
-    direction=LEFT
+    if direction != DOWN:
+        direction=LEFT
     #move_plane()
     print('you pressed the left key')
 
@@ -184,7 +188,7 @@ def move_plane():
 
     if direction == RIGHT:
         #food and plane moving right
-        plane.shape('plane1.gif')
+        plane.shape('planeaa.gif')
         plane.goto(x_pos+square_size,y_pos)
         print('you moved right')
         food_new_pos=plane.pos()
@@ -198,7 +202,7 @@ def move_plane():
         
     elif direction==LEFT:
         #food and plane moving to the left
-        plane.shape('planeleft.gif')
+        plane.shape('planeab.gif')
         plane.goto(x_pos-square_size,y_pos)
         print('you moved left')
         food_new_pos=plane.pos()
@@ -233,7 +237,7 @@ def move_plane():
     if counter_timer == 10:
         printTime()
         counter_timer=0
-    if t != -1:
+    if t != -1 and life_counter != -1:
         turtle.ontimer(move_plane,TIMER_STEP)
     else:
         turtle.clear()
@@ -268,16 +272,25 @@ def drop_food():
             food.hideturtle()
             print('you ate food')
             make_food()
+            
     else:
-        global score
+        global score,life_counter
         score=score-100
-        life.hideturtle()
+        if life_counter ==3:
+            life.hideturtle()
+            life_counter=life_counter-1
+        elif life_counter==2:
+            life2.hideturtle()
+            life_counter=life_counter-1
+        elif life_counter==1:
+            life3.hideturtle()
+            life_counter=life_counter-1
+        
         make_food()
-        
-        
+               
 def make_food():
     #making food apear randomly
-    global food_type
+    global food_type,direction
     food_type = random.randint(1,number_of_types)
     if food_type==1:
         food.shape('grape.gif')
@@ -288,5 +301,7 @@ def make_food():
     else:
         food.shape('arrow')    
     food.showturtle()
+    food.goto(plane.pos())
+    direction=LEFT
 move_plane()
 
