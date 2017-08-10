@@ -3,9 +3,7 @@ import random
 import time
 import pygame
 turtle.tracer(1,0)
-pygame.init()
-pygame.mixer.music.load("mario.mp3")
-pygame.mixer.music.play()
+
 #registered parts:
 turtle.register_shape('planeaa.gif')
 turtle.register_shape('grape.gif')
@@ -14,6 +12,8 @@ turtle.register_shape('banana.gif')
 turtle.register_shape('final_proj_character.gif')
 turtle.register_shape('planeab.gif')
 turtle.register_shape("life.gif")
+turtle.register_shape('warrior.gif')
+turtle.register_shape('chicken.gif')
 
 # lists:
 food_pos=[]
@@ -25,10 +25,10 @@ heart_pos_list=[]
 heart_stamp_list=[]
 heart_pos_list=[]
 heart_stamp_list=[]
-score_x=0
-score_y=0
+warrior_pos_list=[]
+
 #variables:
-t=10
+t=60
 score=0
 SIZE_X=700
 SIZE_Y=600
@@ -50,6 +50,7 @@ LEFT_EDGE=-350
 DOWN=2
 direction=RIGHT
 Direction=RIGHT
+DIRECTION=LEFT
 square_size=30
 food_size=2
 counter_timer = 0
@@ -57,7 +58,10 @@ charmove_counter = 0
 charmove_delay = 3
 heart_size=50
 life_counter=3
-
+warmove_counter=0
+warmove_delay=3
+score_x=0
+score_y=0
 #background:
 screen=turtle.Screen()
 turtle.bgpic('wallpaper2.gif')
@@ -68,11 +72,11 @@ turtle.setup(SIZE_X,SIZE_Y)
 life=turtle.clone()
 life.shape("life.gif")
 life.penup()
-life.goto(-375,225)
+life.goto(-180,200)
 life2=life.clone()
-life2.goto(-425,225)
+life2.goto(-220,200)
 life3=life.clone()
-life3.goto(-475,225)
+life3.goto(-260,200)
 
 
 #plane place:
@@ -89,10 +93,14 @@ turtle.showturtle()
 #character :
 character=turtle.clone()
 character.shape('final_proj_character.gif')
+warrior=turtle.clone()
+warrior.shape('final_proj_character.gif')
+warrior.goto(50,-85)
 character_pos=(0,-450)
 turtle.hideturtle()
 turtle.penup()
 character.penup()
+warrior.penup()
 turtle.goto(SIZE_X/2-200,SIZE_Y/2-30)
 turtle.penup()
 turtle.hideturtle()
@@ -175,16 +183,54 @@ def move_character():
     character_pos_list.pop(0)
     
     #turtle.ontimer(move_character,TIME_STEP_CHARACTER)
+def move_warrior():
+    global DIRECTION
+    my_pos4=warrior.pos()
+    warrior_pos_list.append(my_pos4)
+    x_pos=my_pos4[0]
+    y_pos=my_pos4[1]
+    
+    if DIRECTION==RIGHT:
+        warrior.goto(x_pos+20,y_pos)
+        
+    elif DIRECTION==LEFT:
+       warrior.goto(x_pos-20,y_pos)
 
+    new_pos4=warrior.pos()
+    new_x_pos=new_pos4[0]
+    new_y_pos=new_pos4[1]
+    
+    if new_x_pos>=RIGHT_EDGE:
+        #if the warrior enters the right edge get out in the left 
+        warrior.hideturtle()
+        warrior.goto(-400,-90)
+        warrior.showturtle()
+        
+    elif new_x_pos<=LEFT_EDGE:
+        #if the warrior enters the left edge get out in the right 
+        warrior.hideturtle()
+        warrior.goto(300,-90)
+        warrior.showturtle()
+    
+    warrior_pos_list.pop(0)
 
 def move_plane():
-    global t,counter_timer, charmove_counter
+    global t,counter_timer, charmove_counter, warmove_counter, warmove_delay
+
     
     if charmove_counter < charmove_delay:
         charmove_counter += 1
-    else:
+        warmove_counter += 1
+    elif charmove_counter < charmove_delay:
         move_character()
         charmove_counter = 0
+    elif warmove_counter < warmove_delay:
+        warmove_counter += 1
+    else:
+        move_character()
+        move_warrior()
+        charmove_counter=0
+        warmove_counter=0
     my_pos=plane.pos()
     x_pos= my_pos[0]
     y_pos=my_pos[1]
@@ -244,7 +290,7 @@ def move_plane():
         turtle.ontimer(move_plane,TIMER_STEP)
     else:
         turtle.clear()
-        turtle.goto(0,0)
+        turtle.goto(score_x,score_y)
         turtle.write("Time is up, you earned "+str(score)+" points!",align="Center",font=("Courier", 20,"bold"))
 
 def drop_food():
@@ -267,19 +313,28 @@ def drop_food():
         #turtle.ontimer(drop_food,TIME_STEP)
         cx=character.pos()[0]
         cy=character.pos()[1]
+        wx=warrior.pos()[0]
+        wy=warrior.pos()[1]
         a=30
         b=35
-        if (x_pos>=cx-a) and (x_pos<=cx+a) and (y_pos>=cy-b) and (y_pos<=cy+b):
+        if ((x_pos>=cx-a) and (x_pos<=cx+a) and (y_pos>=cy-b) and (y_pos<=cy+b)):
             global score
             #score adding if food is eaten
             score= score+100
             food.hideturtle()
             print('you ate food')
             make_food()
+        elif ((x_pos>=wx-a) and (x_pos<=wx+a) and (y_pos>=wy-b) and (y_pos<=wy+b)):
+        
+            #score adding if food is eaten
+            score= score+100
+            food.hideturtle()
+            print('you ate food')
+            make_food()
+        
             
     else:
         global score,life_counter
-        score=score-100
         if life_counter ==3:
             life.hideturtle()
             life_counter=life_counter-1
@@ -288,7 +343,7 @@ def drop_food():
             life_counter=life_counter-1
         elif life_counter==1:
             life3.hideturtle()
-            life_counter=life_counter-1
+            quit()
         
         make_food()
                
@@ -303,9 +358,10 @@ def make_food():
     elif food_type==3:
         food.shape('banana.gif')
     else:
-        food.shape('arrow')    
+        food.shape('chicken.gif')    
     food.showturtle()
     food.goto(plane.pos())
     direction=LEFT
 move_plane()
+
 
