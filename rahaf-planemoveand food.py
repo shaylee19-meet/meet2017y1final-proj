@@ -3,7 +3,9 @@ import random
 import time
 import pygame
 turtle.tracer(1,0)
-
+pygame.init()
+pygame.mixer.music.load("mario.mp3")
+pygame.mixer.music.play()
 #registered parts:
 turtle.register_shape('planeaa.gif')
 turtle.register_shape('grape.gif')
@@ -23,9 +25,10 @@ heart_pos_list=[]
 heart_stamp_list=[]
 heart_pos_list=[]
 heart_stamp_list=[]
-
+score_x=0
+score_y=0
 #variables:
-t=60
+t=10
 score=0
 SIZE_X=700
 SIZE_Y=600
@@ -102,7 +105,7 @@ def printTime():
     #timer function:
     global t
     turtle.clear()
-    turtle.write(t)
+    turtle.write(t,font=("Courier",15,"normal"))
     t=t-1
 
 def right():
@@ -241,7 +244,8 @@ def move_plane():
         turtle.ontimer(move_plane,TIMER_STEP)
     else:
         turtle.clear()
-        turtle.write("Time is up, you earned "+str(score)+" points!")
+        turtle.goto(score_x,score_y)
+        turtle.write("Time is up, you earned "+str(score)+" points!",align="Center",font=("Courier", 20,"bold"))
 
 def drop_food():
     #dropping food
